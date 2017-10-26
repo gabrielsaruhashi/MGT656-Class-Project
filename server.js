@@ -1,6 +1,8 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
+
 
 const app = express();
 
@@ -24,9 +26,72 @@ nunjucks.configure('views', {
 });
 app.set('view engine', 'html');
 
+
+// function to valdiate email through regex
+/*
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+*/
+
 // Now, attach our "controllers" to our "routes".
 app.get('/', indexControllers.index);
 
+app.get('/about', function (req, res) {
+  res.render('about');
+});
+
+/*
+app.get('/events/:param', function (req, res) {
+  var param = req.params.param;
+  if (param.toString() == "event") {
+  	res.redirect()
+
+  }
+  res.render('event')
+}) */
+
+app.get('/events/new', function (req, res) {
+  res.render('new');
+});
+
+function ValidURL(str) {
+  var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
+    '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
+    '((\d{1,3}\.){3}\d{1,3}))'+ // OR ip (v4) address
+    '(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // port and path
+    '(\?[;&a-z\d%_.~+=-]*)?'+ // query string
+    '(\#[-a-z\d_]*)?$','i'); // fragment locater
+  if(!pattern.test(str)) {
+    alert("Please enter a valid URL.");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+app.post('/events/new', function (req, res) {
+	if (req.body.title.length == 0 || req.body.title > 50) {
+		 res.locals.errors = "Title was not invalid";
+	}
+
+	if (req.body.location.length == 0 || req.body.location.length > 50) {
+		res.locals.errors = "Location was not valid";
+	}
+	if (!ValidURL(req.body.image)) {
+		res.locals.errors = "Invalid image";
+
+	}
+	var length = req.body.image.length;
+	var image_extension = req.body.image.substring(length - 5, length - 1);
+	if (image_extension != ".png" ||
+		image_extension != ".gif" ||
+		image_extension != ".jpg") 
+	{
+		res.locals.errors = "Invalid image extensions";
+	}
+	res.redirect('/');
+});
 // Start up the application and listen on the specified
 // port, or default to port 4000.
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 8000);

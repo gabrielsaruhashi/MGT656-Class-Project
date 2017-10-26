@@ -3,17 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title>{{title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   </head>
   <body>
     <header>
-      This is the header.
+      <img id="logo" src="http://www.logoopenstock.com/media/users/362/64443/raw/c4249de941e491c01b271ba694c1294e-funky-tough-teddy-logo-template.jpg" height="120" alt="logo" />
+  </header>
     </header>
     <div>
       {% block body %}
       {% endblock %}
     </div>
     <footer>
-      This is the footer.
+      <a href='/about'>About</a>
+      <a href='/'>Home</a>
+      <div class="d-block d-md-none">mobile!</div>
     </footer>
   </body>
 </html>

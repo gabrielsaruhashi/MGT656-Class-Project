@@ -1,5 +1,26 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  This is the body of the index.
+	<ul>
+      
+	  <li class="event" id="event-0">
+	    <a href="/events/0" id="title">Hello world</a>
+	    <br />
+	    <time>9/19/17 23:30</time>
+	  </li>
+	  
+	  <li class="event" id="event-1">
+	    <a href="/events/1" id="title">It&#39;s me again</a>
+	    <br />
+	    <time>10/31/17 4:00</time>
+	  </li>
+	  
+	  <li class="event" id="event-2">
+	    <a href="/events/2" id="title">I&#39;m still around</a>
+	    <br />
+	    <time>12/25/17 0:30</time>
+	  </li>
+	  
+	</ul>
+	<a href='/events/new' id='new'>Create an event</a>
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+<ul class="form-errors">
+    
+</ul>
+
+<h1 id="title">Hello world</h1>
+<br />
+<span id="date">9/19/17 23:30</span>
+<br />
+<span id="location">New Haven</span>
+<br />
+<img src="http://yaleherald.com/wp-content/uploads/2013/02/Screen-Shot-2013-02-27-at-11.51.10-AM.png" alt="event image" id="image" />
+<br />
+Attendees:
+<ul class="list-group" id="attendees">
+    
+        <li class="list-group-item">jacob.bendicksen@yale.edu</li>
+    
+</ul>
+<br />
+
+<form action="/rsvp/0" method="post">
+    <input type="email" id="email" name="email" />
+    <button type="submit" class="btn" name="submit">Submit</button>
+</form>
+
+{% endblock %}
