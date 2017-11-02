@@ -2,6 +2,8 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const validUrl = require('valid-url');
+
 
 
 const app = express();
@@ -24,8 +26,12 @@ nunjucks.configure('views', {
     autoescape: true,
     express: app,
 });
+
 app.set('view engine', 'html');
 
+app.use(bodyParser.urlencoded({
+  extended: true,
+})); // for parsing application/x-www-form-urlencoded
 
 // function to valdiate email through regex
 /*
@@ -41,19 +47,21 @@ app.get('/about', function (req, res) {
   res.render('about');
 });
 
-/*
+
 app.get('/events/:param', function (req, res) {
   var param = req.params.param;
-  if (param.toString() == "event") {
-  	res.redirect()
+  if (param.toString() == "new") {
+  	res.render('new');
+  }
+  else{
+  	  res.render('event');
 
   }
-  res.render('event')
-}) */
+})
 
-app.get('/events/new', function (req, res) {
+/*app.get('/events/new', function (req, res) {
   res.render('new');
-});
+}); */
 
 function ValidURL(str) {
   var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
@@ -70,27 +78,50 @@ function ValidURL(str) {
   }
 }
 
-app.post('/events/new', function (req, res) {
-	if (req.body.title.length == 0 || req.body.title > 50) {
-		 res.locals.errors = "Title was not invalid";
-	}
+app.post('/events/:param', function (req, res) {
+	console.log(req.body);
 
-	if (req.body.location.length == 0 || req.body.location.length > 50) {
-		res.locals.errors = "Location was not valid";
-	}
-	if (!ValidURL(req.body.image)) {
-		res.locals.errors = "Invalid image";
+		//console.log(req.body.title.length);
 
-	}
-	var length = req.body.image.length;
-	var image_extension = req.body.image.substring(length - 5, length - 1);
-	if (image_extension != ".png" ||
-		image_extension != ".gif" ||
-		image_extension != ".jpg") 
+	var param = req.params.param;
+
+	if (param.toString() === "new")
 	{
-		res.locals.errors = "Invalid image extensions";
+
+
+		if (req.body.title.length === 0 || req.body.title.length > 50) {
+		 //res.locals.errors = "Title was not invalid";
+		 //return res.redirect('/about');
+
+		 return res.render('event', {errors: ['Bad Title'],});
+		}
+
+		if (req.body.location.length === 0 || req.body.location.length > 50) {
+			
+			return res.redirect('/about');
+
+			res.locals.errors = "Location was not valid";
+		}
+		if (!validUrl.isUri(req.body.image)) {
+
+			return res.redirect('/about');
+
+			res.locals.errors = "Invalid image";
+
+		}
+		var length = req.body.image.length;
+		var image_extension = req.body.image.substring(length - 5, length - 1);
+		if (image_extension !== ".png" ||
+			image_extension !== ".gif" ||
+			image_extension !== ".jpg") 
+		{
+
+			res.locals.errors = "Invalid image extensions";
+		}
+		res.redirect('/');
 	}
-	res.redirect('/');
+
+	
 });
 // Start up the application and listen on the specified
 // port, or default to port 4000.
